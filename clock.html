@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Clock</title>
+        <style>
+        .container {
+            position:absolute;
+            background-color: pink;
+            width: 500px;
+            height: 500px;
+            left: calc(50% - 250px);
+            top: 50px;
+        }
+        #analog {
+            width: 250px;
+            height: 250px;
+            border-radius: 100%;
+            border: 7px solid black;
+            background-color: #f4f4f4;
+            position:relative;
+            left: calc(50% - 125px);
+            top: 50px;
+        }
+        #analog>div[id^="num"] {
+            position:absolute;
+            left: calc(50% - 6px);
+            height: 100%;
+            line-height:40px;
+            font-size: 120%;
+            font-weight:bold;
+        }
+        #analog>div[id^="teeth"] {
+            position:absolute;
+            left: 50%;
+            height: 100%;
+            line-height: 7px;
+            font-size: 50%;
+        }
+        #sonic {
+            position: absolute;
+            left: 110px;
+            top: 40px;
+            font-size: 75%;
+            font-weight:bold;
+        }
+        #quartz {
+            position: absolute;
+            left: 100px;
+            top: 200px;
+            font-size: 75%;
+            font-weight:bold;
+        }
+        #hr, #min, #sec {
+            transform-origin: 50% 80%;
+            position: absolute;
+        }
+        #hr {
+            width: 6px;
+            height: 25%;
+            background-color: black;
+            left: calc(50% - 0px);
+            top: 31%;
+        }
+        #min {
+            width: 4px;
+            height: 30%;
+            background-color: blue;
+            left: calc(50% + 1px);
+            top: 27%;
+        }
+        #sec {
+            width: 2px;
+            height: 35%;
+            background-color: red;
+            left: calc(50% + 2px);
+            top: 23%;
+        }
+        #point {
+            width: 15px;
+            height: 15px;
+            background-color:blueviolet;
+            border-radius: 100%;
+            position:absolute;
+            left: calc(50% - 5px);
+            top: 48%;
+        }
+        #digital {
+            position: relative;
+            left: calc(50% - 125px);
+            top: 65px;
+            text-align:center;
+            background-color: #f4f4f4;
+            border: 2px double grey;
+            width: 250px;
+            height: 70px;
+            padding: 5px;
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        img {
+            border-radius: 20%;
+        }
+        .myclock {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="analog">
+            <div id="num0"><div id="num00">12</div></div>
+            <div id="num1"><div id="num01">1</div></div>
+            <div id="num2"><div id="num02">2</div></div>
+            <div id="num3"><div id="num03">3</div></div>
+            <div id="num4"><div id="num04">4</div></div>
+            <div id="num5"><div id="num05">5</div></div>
+            <div id="num6"><div id="num06">6</div></div>
+            <div id="num7"><div id="num07">7</div></div>
+            <div id="num8"><div id="num08">8</div></div>
+            <div id="num9"><div id="num09">9</div></div>
+            <div id="num10"><div id="num010">10</div></div>
+            <div id="num11"><div id="num011">11</div></div>
+            <div id="teeth0">|</div>
+            <div id="teeth1">|</div>
+            <div id="teeth2">|</div>
+            <div id="teeth3">|</div>
+            <div id="teeth4">|</div>
+            <div id="teeth5">|</div>
+            <div id="teeth6">|</div>
+            <div id="teeth7">|</div>
+            <div id="teeth8">|</div>
+            <div id="teeth9">|</div>
+            <div id="teeth10">|</div>
+            <div id="teeth11">|</div>
+            <div id="teeth12">|</div>
+            <div id="teeth13">|</div>
+            <div id="teeth14">|</div>
+            <div id="teeth15">|</div>
+            <div id="teeth16">|</div>
+            <div id="teeth17">|</div>
+            <div id="teeth18">|</div>
+            <div id="teeth19">|</div>
+            <div id="teeth20">|</div>
+            <div id="teeth21">|</div>
+            <div id="teeth22">|</div>
+            <div id="teeth23">|</div>
+            <div id="teeth24">|</div>
+            <div id="teeth25">|</div>
+            <div id="teeth26">|</div>
+            <div id="teeth27">|</div>
+            <div id="teeth28">|</div>
+            <div id="teeth29">|</div>
+            <div id="teeth30">|</div>
+            <div id="teeth31">|</div>
+            <div id="teeth32">|</div>
+            <div id="teeth33">|</div>
+            <div id="teeth34">|</div>
+            <div id="teeth35">|</div>
+            <div id="teeth36">|</div>
+            <div id="teeth37">|</div>
+            <div id="teeth38">|</div>
+            <div id="teeth39">|</div>
+            <div id="teeth40">|</div>
+            <div id="teeth41">|</div>
+            <div id="teeth42">|</div>
+            <div id="teeth43">|</div>
+            <div id="teeth44">|</div>
+            <div id="teeth45">|</div>
+            <div id="teeth46">|</div>
+            <div id="teeth47">|</div>
+            <div id="teeth48">|</div>
+            <div id="teeth49">|</div>
+            <div id="teeth50">|</div>
+            <div id="teeth51">|</div>
+            <div id="teeth52">|</div>
+            <div id="teeth53">|</div>
+            <div id="teeth54">|</div>
+            <div id="teeth55">|</div>
+            <div id="teeth56">|</div>
+            <div id="teeth57">|</div>
+            <div id="teeth58">|</div>
+            <div id="teeth59">|</div>
+            <div id="hr"></div>
+            <div id="min"></div>
+            <div id="sec"></div>
+            <div id="sonic">SONIC</div>
+            <div id="quartz">QUARTZ</div>
+            <div id="point"></div>
+        </div>
+        <div id="digital">
+            <h1>Digital Clock</h1>
+            <h2 id="clock"></h2>
+        </div>
+    </div>
+    <script>
+        for (var i = 0; i < 12; i++) {
+            document.getElementById("num" + i).style.cssText = "transform: rotate(" + (i * 30) + "deg);";
+            document.getElementById("num0" + i).style.cssText = "transform: rotate(" + (-i * 30) + "deg);";
+        }
+        for (i = 0; i < 60; i++) {
+            document.getElementById("teeth" + i).style.cssText = "transform: rotate(" + (i * 6) + "deg);";
+        }
+        function analog() {
+            var time = new Date();
+            var ahrs = time.getHours() % 12;
+            var amin = time.getMinutes();
+            var asec = time.getSeconds();
+            document.getElementById("hr").style.cssText = "transform: rotate(" + ((ahrs * 30) + (amin * 0.5)) + "deg);";
+            document.getElementById("min").style.cssText = "transform: rotate(" + ((amin * 6) + (asec * 0.1)) + "deg);";
+            document.getElementById("sec").style.cssText = "transform: rotate(" + (asec * 6) + "deg);";
+        }
+        function digital() {
+            var time = new Date();
+            var dhrs = time.getHours() % 12;
+            var dmin = time.getMinutes();
+            var dsec = time.getSeconds();
+            if (dhrs < 10) {
+                dhrs = "0" + dhrs;
+            }
+            if (dmin < 10) {
+                dmin = "0" + dmin;
+            }
+            if (dsec < 10) {
+                dsec = "0" + dsec;
+            }
+            document.getElementById("clock").innerHTML = dhrs + ":" + dmin + "." + dsec;
+        }
+        setInterval(function() {
+            digital();
+            analog();
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .hide{
+            display:none;
+        }
+        .show{
+            display:block;
+        }
+
+    </style>
+    <title>Menu</title>
+</head>
+<body>
+    <ul id='menu'>
+        <li id='ass' onClick='showMenu(id);'>Assets</li>
+        <ul class='hide'>
+            <li id='ass1' onClick='showMenu(id);'>Current Assets</li>
+            <ul class="hide">
+                <li>A/c Receivable</li>
+                <li>Cash</li>
+                <li>Bank</li>
+            </ul>
+            <li id='ass2' onClick='showMenu(id);'>Fixed Assets</li>
+            <ul class="hide">
+                <li>Furniture & Fixtures</li>
+                <li>Building</li>
+                <li>Land</li>
+            </ul>
+        </ul>
+        </li>
+        <li id='exp' onClick='showMenu(id);'>Expenses</li>
+        <ul class='hide'>
+            <li id='exp1' onClick='showMenu(id);'>Operating Expense</li>
+            <ul class="hide">
+                <li>Legal fees</li>
+                <li>Office supplies</li>
+                <li>Property taxes</li>
+            </ul>
+            <li id='exp2' onClick='showMenu(id);'>Administrative Expense</li>
+            <ul class="hide">
+                <li>Accounting staff wages and benefits</li>
+                <li>Office supplies</li>
+                <li>Utilities</li>
+            </ul>
+        </ul>
+    </ul>
+    <script>
+        showMenu = (getId) => {
+            const getNav = document.getElementById(getId);
+            if (getNav.nextElementSibling.className === 'show') {
+                getNav.nextElementSibling.className = 'hide'
+            }
+            else {
+                for (var i = 0; i < getNav.parentElement.children.length; i++) {
+                    if (getNav.parentElement.children[i].id) {
+                        if (getNav.parentElement.children[i].id === getId) {
+                            getNav.parentElement.children[i + 1].classList.remove('hide');
+                            getNav.parentElement.children[i + 1].classList.add('show');
+                        }
+                        else {
+                            getNav.parentElement.children[i + 1].classList.remove('show');
+                            getNav.parentElement.children[i + 1].classList.add('hide');
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

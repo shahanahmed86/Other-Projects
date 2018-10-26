@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Public Chat</title>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        #login tr td {
+            border-collapse: collapse;
+        }
+        #chatbox {
+            position: relative;
+            background-color: lightgoldenrodyellow;
+            border: 1px solid darkred;
+            width: 600px;
+            height: 400px;
+            overflow:scroll;
+        }
+        #textme {
+            border: 1px solid darkred;
+            width: 600px;
+            padding: 5px 0px;
+        }
+        .chat {
+            margin-left: auto;
+            width: 250px;
+            padding: 5px;
+        }
+        .chat h2 {
+            text-decoration: underline;
+        }
+        .chat h2, .chat p {
+            margin: 0px;
+        }
+        input[type="button"] {
+            padding: 5px;
+            border: 1px solid white;
+            background-color: darkred;
+            color:white;
+            border-radius: 7px;
+        }
+        .show {
+            display:block;
+        }
+        .hide {
+            display:none;
+        }
+        #chat h2 {
+            margin:2px;
+        }
+    </style>
+</head>
+<body>
+    <form action="#javascript:void(0)" method="post">
+        <table id="login" class="show">
+            <tr>
+                <td><label for='username'>User Name :</label></td>
+                <td>
+                    <input type="text" id="username">
+                </td>
+                <td style='text-align:center'>
+                    <input type="button" value="Join in" onclick="validateChat();">
+                </td>
+            </tr>
+        </table>
+        <table id="chat" class="hide">
+            <tr>
+                <td>
+                    <h2 id="wellcome"></h2>
+                    <div>
+                        <div id="chatbox"></div>
+                        <input type="text" placeholder="Text me" id="textme">
+                        <input type="button" value="Send" onclick="sendMessage();">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        let chat = [];
+        const validateChat = () => {
+            const userName = document.getElementById("username").value;
+            const users = {
+                    name: userName,
+                    messages: undefined
+                };
+            document.getElementById("wellcome").innerHTML = "Wellcome Mr. " + userName;
+            document.getElementById("login").className = "hide";
+            document.getElementById("chat").className = "show";
+            return users;
+        }
+        const sendMessage = () => {
+            let users = validateChat();
+            const newMessage = document.getElementById("textme");
+            users.messages = newMessage.value;
+            if (localStorage.getItem("userData") === null) {
+                chat.push(users);
+                localStorage.setItem("userData", JSON.stringify(chat));
+            }
+            else {
+                chat = JSON.parse(localStorage.getItem("userData"));
+                chat.push(users);
+                localStorage.setItem("userData", JSON.stringify(chat));
+            }
+            newMessage.value = "";
+        }
+        setInterval(() => {
+            let table = "<ul>";
+            const chatBox = document.getElementById("chatbox");
+            if (localStorage.getItem("userData") !== null) {
+                chat = JSON.parse(localStorage.getItem("userData"));
+            }
+            chat.forEach(
+                value => {
+                    table += "<li class='chat'><h2>" + value.name + "</h2><p>" + value.messages + "</p></li>";
+                }
+            );
+            table += "</ul>";
+            chatBox.innerHTML = table;
+        }, 1000); 
+    </script>
+</body>
+</html>
