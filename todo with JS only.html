@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todo App</title>
+    <style>
+            body {
+                background-color: #f4f4f4;
+                width: 80%;
+                overflow: auto;
+                margin: auto;
+                padding: 15px 0px;
+            }
+            table {
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            td, th {
+                border: 1px solid white;
+                vertical-align: text-top;
+                text-align: center;
+                padding: 7px;
+            }
+            td:nth-child(2) {
+                width: 300px;
+                text-align: left;
+            }
+            input[type="text"] {
+                padding: 8px;
+            }
+            input[type="button"] {
+                width: 75px;
+                padding: 10px;
+                background-color: red;
+                color: white;
+                border: 1px solid white;
+            }
+        </style>
+</head>
+
+<body>
+    <section>
+        <input autofocus id='todo-input' type='text' name='message' onkeyup="onPressEnter(event)"
+            placeholder="Please type your todo" />
+        <input type='button' id='onClickButton' value='Save' onclick="onClickSaveButton()"/>
+    </section>
+    <div id="root"></div>
+    <script>
+        const state = {
+            rootDiv: document.querySelector('#root'),
+            todoInput: document.querySelector('#todo-input'),
+            onClickButton: document.querySelector('#onClickButton'),
+            editing: false,
+            index: '',
+            todo: [],
+        }
+        onPressEnter = (ev) => {
+            if (ev.keyCode === 13) {
+                onSaveHandler(ev.target.value)
+            }
+        }
+        onClickSaveButton = () => onSaveHandler(state.todoInput.value);
+        onSaveHandler = (message) => {
+            if (message) {
+                if (state.editing) {
+                    state.todo[state.index] = message;
+                    onClickButton.value = 'Save';
+                } else {
+                    state.todo = state.todo.concat(message);
+                }
+                executeList(state.todo);
+                state.todoInput.value = '';
+            } else {
+                alert('Field can\'t be left empty');
+            }
+        }
+        onEditHandler = (ind) => {
+            state.index = ind;
+            state.editing= true;
+            state.todoInput.value = state.todo[ind];
+            onClickButton.value = 'Update';
+        }
+        onDeleteHandler = (ind) => {
+            state.todo = state.todo.filter((val, i) => i !== ind);
+            state.index = '';
+            state.editing= false;
+            state.todoInput.value = '';
+            onClickButton.value = 'Save';
+            executeList(state.todo);
+        }
+        executeList = (todo) => {
+            if (todo.length) {
+                const table = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Description</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${todo.map((val, ind) => {
+                                return `
+                                    <tr>
+                                        <td>${ind + 1}</td>
+                                        <td>${val}</td>
+                                        <td>
+                                            <input type='button' value="Edit" onclick="onEditHandler(${ind})" />
+                                            <input type='button' value="Delete" onclick="onDeleteHandler(${ind})" />
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+                state.rootDiv.innerHTML = table;
+            } else {
+                state.rootDiv.innerHTML = '';
+            }
+        }
+    </script>
+</body>
+
+</html>
