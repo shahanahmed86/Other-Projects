@@ -37,6 +37,8 @@
                 background-color: red;
                 color: white;
                 border: 1px solid white;
+                border-radius: 5px;
+                font-weight: bold;
             }
         </style>
 </head>
@@ -71,8 +73,10 @@
                 } else {
                     state.todo = state.todo.concat(message);
                 }
-                executeList(state.todo);
+                state.index = '';
+                state.editing= false;
                 state.todoInput.value = '';
+                executeList(state.todo);
             } else {
                 alert('Field can\'t be left empty');
             }
