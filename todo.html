@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            width: 80%;
+            overflow: auto;
+            margin: auto;
+            padding: 15px 0px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        td, th {
+            border: 1px solid white;
+            vertical-align: text-top;
+            text-align: center;
+            padding: 7px;
+        }
+        td:nth-child(2) {
+            width: 300px;
+            text-align: left;
+        }
+        input[type="text"] {
+            padding: 8px;
+        }
+        input[type="button"] {
+            width: 75px;
+            padding: 10px;
+            background-color: red;
+            color: white;
+            border: 1px solid white;
+        }
+    </style>
+    <title>TODO App</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type='text/babel'>
+        class List extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    todo: []
+                }
+            }
+            static getDerivedStateFromProps = (nextProps, prevProps) => {
+                if (nextProps !== prevProps) return { todo: nextProps.todo };
+                return null;
+            }
+            render() {
+                return (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Description</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.todo.map((val, ind) => {
+                                return (
+                                    <tr key={ind}>
+                                        <td>{ind + 1}</td>
+                                        <td>{val}</td>
+                                        <td>
+                                            <input
+                                                type='button'
+                                                value='Edit'
+                                                onClick={() => this.props.onEditHandler(ind)}
+                                            />
+                                            <input
+                                                type='button'
+                                                value='Delete'
+                                                onClick={() => this.props.onDeleteHandler(ind)}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                );
+            }
+        }
+        class App extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    message: '',
+                    todo: [],
+                    editing: false,
+                    ind: ''
+                }
+            }
+            handleChange = (ev) => {
+                const { name, value } = ev.target;
+                this.setState(() => {
+                    return {
+                        [name]: value
+                    }
+                });
+            }
+            onPress = (ev) => {
+                if (ev.keyCode === 13) this.onSaveHandler();
+            }
+            onSaveHandler = () => {
+                if (this.state.message) {
+                    if (this.state.editing) {
+                        this.setState((state) => {
+                            const updatedTodo = state.todo;
+                            updatedTodo[state.ind] = state.message;
+                            return {
+                                todo: updatedTodo,
+                                message: '',
+                                editing: false,
+                                ind: ''
+                            }
+                        });
+                    } else {
+                        this.setState((state) => {
+                            return {
+                                todo: state.todo.concat(state.message),
+                                message: ''
+                            }
+                        });
+                    }                 
+                } else {
+                    alert('Please type something into the text box');
+                }
+            }
+            onDeleteHandler = (i) => {
+                this.setState((state) => {
+                    return {
+                        todo: state.todo.filter((x, index) => index !== i),
+                        ind: '',
+                        message: '',
+                        editing: false
+                    }
+                });
+            }
+            onEditHandler = (i) => {
+                this.setState((state) => {
+                    return {
+                        message: state.todo[i],
+                        ind: i,
+                        editing: true
+                    }
+                });
+            }
+            render() {
+                return (
+                    <div>
+                        <input
+                            autoFocus
+                            type='text'
+                            placeholder="Please type todos"
+                            name='message' value={this.state.message}
+                            onChange={this.handleChange}
+                            onKeyDown={this.onPress}
+                        />
+                        <input
+                            type='button'
+                            value={this.state.editing ? 'Update' : 'Save'}
+                            onClick={this.onSaveHandler}
+                        />
+                        {this.state.todo.length ? (
+                            <List
+                                todo={this.state.todo}
+                                onEditHandler={this.onEditHandler}
+                                onDeleteHandler={this.onDeleteHandler}
+                            />
+                        ) : ''}
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(<App />, document.querySelector('#root'));
+    </script>
+</body>
+
+</html>
