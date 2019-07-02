@@ -77,11 +77,24 @@
 			</div>
 		);
 	}
+	function NavBar(props) {
+		return (
+			<ul>
+				{props.languages.map((val, i) => (
+					<li key={i}>
+						<a href="javascript:void(0)" onClick={() => props.onGetLanguage(val)}>
+							{val}
+						</a>
+					</li>
+				))}
+			</ul>
+		);
+	}
     class App extends React.Component {
 		constructor() {
 			super();
 			this.state = {
-				language: ['Java', 'Javascript', 'Python', 'Ruby'],
+				languages: ['All', 'Javascript', 'Python', 'Ruby'],
 				repos: [],
 				loading: true
 			}
@@ -104,23 +117,19 @@
 			this.getRequest(language);
 		}
       	render() {
-			if (this.state.loading) return <Loading />
 			return (
 				<div>
-					<ul>
-						{this.state.language.map((val, i) => (
-							<li key={i}>
-								<a href="javascript:void(0)" onClick={() => this.onGetLanguage(val)}>
-									{val}
-								</a>
-							</li>
-						))}
-					</ul>
-					{this.state.repos.length ? (
-						<ReposList
-							repos={this.state.repos}
-						/>
-					) : ''}
+					<NavBar
+						languages={this.state.languages}
+						onGetLanguage={this.onGetLanguage}
+					/>
+					{this.state.loading ? <Loading /> : (
+						this.state.repos.length ? (
+							<ReposList
+								repos={this.state.repos}
+							/>
+						) : ''
+					)}
 				</div>
 			)
       	}
