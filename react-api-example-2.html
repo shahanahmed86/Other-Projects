@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Popular Repos</title>
+  <style>
+   .container-flex {
+	   display: flex;
+	   flex-wrap: wrap;
+	   justify-content: space-evenly;
+   }
+   .container-flex>ul {
+	   width: 175px;
+   }
+  </style>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+</head>
+<body>
+  <div id='app'></div>
+  <script>
+    API = {
+      fetchPopularRepos(language) {
+        // "language" can be "javascript", "ruby", "python", or "all"
+        const encodedURI = encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`)
+        return fetch(encodedURI)
+          .then((data) => data.json())
+          .then((repos) => repos.items)
+          .catch((error) => {
+            console.warn(error)
+            return null
+          });
+      }
+    }
+  </script>
+
+  <script type='text/babel'>
+    class Loading extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          text: 'Loading'
+        };
+      }
+      componentDidMount() {
+        const stopper = this.state.text + '...';
+        this.interval = setInterval(() => {
+          this.state.text === stopper
+            ? this.setState(() => ({ text: 'Loading' }))
+            : this.setState((prevState) => ({ text: prevState.text + '.' }))
+        }, 300)
+      }
+      componentWillUnmount() {
+        clearInterval(this.interval);
+      }
+      render() {
+        return (
+          <h3>
+            {this.state.text}
+          </h3>
+        )
+      }
+	}
+	function ReposList(props) {
+		return (
+			<div className="container-flex">
+				{props.repos.map(({ name, language, owner, stargazers_count }, i) => (
+					<ul key={i}>
+						<li>
+							<img src={owner.avatar_url} alt={name} width="100" height="100" />
+						</li>
+						<li>Name: {name}</li>
+						<li>Language: {language}</li>
+						<li>Count: {stargazers_count}</li>
+					</ul>
+				))}
+			</div>
+		);
+	}
+    class App extends React.Component {
+		constructor() {
+			super();
+			this.state = {
+				language: ['Java', 'Javascript', 'Python', 'Ruby'],
+				repos: [],
+				loading: true
+			}
+		}
+		componentDidMount() {
+			this.setState({ loading: true });
+			this.getRequest('All');
+		}
+		getRequest = (language) => {
+			API.fetchPopularRepos(language)
+				.then((res) => {
+					this.setState({
+						repos: res,
+						loading: false
+					})
+				});
+		}
+		onGetLanguage = (language) => {
+			this.setState({ loading: true });
+			this.getRequest(language);
+		}
+      	render() {
+			if (this.state.loading) return <Loading />
+			return (
+				<div>
+					<ul>
+						{this.state.language.map((val, i) => (
+							<li key={i}>
+								<a href="javascript:void(0)" onClick={() => this.onGetLanguage(val)}>
+									{val}
+								</a>
+							</li>
+						))}
+					</ul>
+					{this.state.repos.length ? (
+						<ReposList
+							repos={this.state.repos}
+						/>
+					) : ''}
+				</div>
+			)
+      	}
+    }
+    ReactDOM.render(
+      <App />,
+      document.getElementById('app')
+    )
+  </script>
+</body>
+</html>
