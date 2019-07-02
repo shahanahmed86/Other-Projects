@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <script src='https://unpkg.com/react@16/umd/react.development.js' crossorigin></script>
+    <script src='https://unpkg.com/react-dom@16/umd/react-dom.development.js' crossorigin></script>
+    <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='root'></div>
+    <script>
+        API = {
+            fetchFriends() {
+                return new Promise((res, rej) => {
+                    const friends = [
+                        { name: 'Shahan', active: true},
+                        { name: 'Farhan', active: true},
+                        { name: 'Arsalan', active: true},
+                        { name: 'Zeeshan', active: false},
+                    ];
+                    setTimeout(() => res(friends), 3000);
+                })
+            }
+
+        }
+    </script>
+    <script type='text/babel'>
+        class Loading extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    text: 'Loading'
+                }
+            }
+            componentDidMount() {
+                const stopper = 'Loading....';
+                this.interval = setInterval(() => {
+                    this.setState((currentState) => {
+                        return {
+                            text: currentState.text + '.'
+                        }
+                    })
+                    if (this.state.text === stopper) this.setState({ text: 'Loading' });
+                }, 300);
+            }
+            componentWillUnmount() {
+                clearInterval(this.interval);
+            }
+            render() {
+                return(
+                    <div>
+                        <h4>{this.state.text}</h4>
+                    </div>
+                );
+            }
+        }
+        function ActiveList(props) {
+            return (
+                <div>
+                    <h2>Active List</h2>
+                    <ul>
+                        {props.friends.map((val, ind) => (
+                            <li key={ind}>
+                                <span>{val.name}</span>
+                                <input
+                                    type='button'
+                                    value='Deactivate'
+                                    onClick={() => props.onToggleFriend(val.name)}
+                                />
+                                <input
+                                    type='button'
+                                    value='Remove'
+                                    onClick={() => props.onRemoveFriend(val.name)}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+        function InactiveList(props) {
+            return (
+                <div>
+                    <h2>Inactive List</h2>
+                    <ul>
+                        {props.friends.map((val, ind) => (
+                            <li key={ind}>
+                                <span>{val.name}</span>
+                                <input
+                                    type='button'
+                                    value='Active'
+                                    onClick={() => props.onToggleFriend(val.name)}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+        class App extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    friends: [],
+                    input: '',
+                    loading: true
+                }
+            }
+            componentDidMount() {
+                API.fetchFriends().then((friends) => this.setState({ friends, loading: false }));
+            }
+            handleChange = (ev) => {
+                const { name, value } = ev.target;
+                this.setState({
+                    [name]: value
+                });
+            }
+            onAddFriend = () => {
+                this.setState((currentState) => {
+                    return {
+                        friends: currentState.friends.concat({ name: currentState.input, active: true }),
+                        input: ''
+                    }
+                });
+            }
+            onToggleFriend = (name) => {
+                this.setState((currentState) => {
+                    const friend = currentState.friends.find((val) => val.name === name);
+                    return {
+                        friends: currentState.friends.filter((val) => val.name !== name).concat({ name: friend.name, active: !friend.active })
+                    }
+                });
+            }
+            onRemoveFriend = (name) => {
+                this.setState((currentState) => {
+                    return {
+                        friends: currentState.friends.filter((val) => val.name !== name)
+                    }
+                });
+            }
+            onClearFriends = () => {
+                this.setState({
+                    friends: []
+                })
+            }
+            render() {
+                if (this.state.loading) return <Loading />
+                return (
+                    <div>
+                        <input
+                            type='text'
+                            name='input' value={this.state.input}
+                            onChange={this.handleChange}
+                        />
+                        <input
+                            type='button'
+                            value='Submit'
+                            onClick={this.onAddFriend}
+                        /><br /><br />
+                        <input
+                            type='button'
+                            value='Clear all Friends'
+                            onClick={this.onClearFriends}
+                        />
+                        {this.state.friends.length ? (
+                            <div>
+                                <ActiveList
+                                    friends={this.state.friends.filter((val) => val.active)}
+                                    onToggleFriend={this.onToggleFriend}
+                                    onRemoveFriend={this.onRemoveFriend}
+                                />
+                                <InactiveList
+                                    friends={this.state.friends.filter((val) => !val.active)}
+                                    onToggleFriend={this.onToggleFriend}
+                                />
+                            </div>
+                        ) : ''}
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(
+            <App />,
+            document.querySelector('#root')
+        );
+    </script>
+</body>
+
+</html>
