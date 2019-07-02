@@ -38,14 +38,11 @@
                 }
             }
             componentDidMount() {
-                const stopper = 'Loading....';
+                const stopper = this.state.text + '...';
                 this.interval = setInterval(() => {
-                    this.setState((currentState) => {
-                        return {
-                            text: currentState.text + '.'
-                        }
-                    })
-                    if (this.state.text === stopper) this.setState({ text: 'Loading' });
+                    this.state.text === stopper
+                        ? this.setState({ text: 'Loading' })
+                        : this.setState((currentState) => ({ text: currentState.text + '.' }))
                 }, 300);
             }
             componentWillUnmount() {
