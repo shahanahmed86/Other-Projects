@@ -8,8 +8,9 @@
 	   flex-wrap: wrap;
 	   justify-content: space-evenly;
    }
-   .container-flex>ul {
-	   width: 175px;
+   .container-flex>li {
+	   width: 225px;
+	   margin: 15px;
    }
   </style>
   <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
@@ -63,17 +64,20 @@
 	}
 	function ReposList(props) {
 		return (
-			<div className="container-flex">
-				{props.repos.map(({ name, language, owner, stargazers_count }, i) => (
-					<ul key={i}>
-						<li>
-							<img src={owner.avatar_url} alt={name} width="100" height="100" />
+			<div>
+				<ul className="container-flex">
+					{props.repos.map(({ name, language, owner, stargazers_count, html_url }, i) => (
+						<li key={i}>
+							<ul>
+								<li><img src={owner.avatar_url} alt={name} width="100" height="100" /></li>
+								<li><a href={html_url}>{name}</a></li>
+								<li>Name: {name}</li>
+								<li>Language: {language}</li>
+								<li>Count: {stargazers_count}</li>
+							</ul>
 						</li>
-						<li>Name: {name}</li>
-						<li>Language: {language}</li>
-						<li>Count: {stargazers_count}</li>
-					</ul>
-				))}
+					))}
+				</ul>
 			</div>
 		);
 	}
@@ -95,6 +99,7 @@
 			super();
 			this.state = {
 				languages: ['All', 'Javascript', 'Python', 'Ruby'],
+				language: 'All',
 				repos: [],
 				loading: true
 			}
@@ -108,12 +113,13 @@
 				.then((res) => {
 					this.setState({
 						repos: res,
-						loading: false
+						loading: false,
+						language
 					})
 				});
 		}
 		onGetLanguage = (language) => {
-			this.setState({ loading: true });
+			this.setState({ loading: true, language });
 			this.getRequest(language);
 		}
       	render() {
@@ -125,9 +131,12 @@
 					/>
 					{this.state.loading ? <Loading /> : (
 						this.state.repos.length ? (
-							<ReposList
-								repos={this.state.repos}
-							/>
+							<div>
+								<h3 style={{ textAlign: 'center' }}>{this.state.language}</h3>
+								<ReposList
+									repos={this.state.repos}
+								/>
+							</div>
 						) : ''
 					)}
 				</div>
